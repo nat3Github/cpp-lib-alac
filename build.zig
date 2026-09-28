@@ -4,8 +4,10 @@ const std = @import("std");
 pub fn build(b: *std.Build) void {
     const target = b.standardTargetOptions(.{});
     const optimize = b.standardOptimizeOption(.{});
+    const libc_include = b.option(std.Build.LazyPath, "libc_include", "Build without libc against these headers; the consumer provides the symbols");
 
-    const mod = b.createModule(.{ .target = target, .optimize = optimize, .link_libc = true });
+    const mod = b.createModule(.{ .target = target, .optimize = optimize, .link_libc = libc_include == null });
+    if (libc_include) |p| mod.addIncludePath(p); // -I: must win over the macOS SDK headers zig always adds
     mod.addIncludePath(b.path("codec"));
     // The core relies on wrapping signed shifts and unaligned uint32 loads (both UB in C), which
     // UBSan traps in Debug/ReleaseSafe; the other UBSan checks stay on.
