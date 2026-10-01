@@ -34,7 +34,12 @@
                     (((int64_t)x >> 8) & 0x00000000ff000000LL) | (((int64_t)x >> 24) & 0x0000000000ff0000LL) | \
                     (((int64_t)x >> 40) & 0x000000000000ff00LL) | (((int64_t)x >> 56) & 0x00000000000000ffLL)))
 
-#if defined(__i386__)
+#if defined(TARGET_RT_LITTLE_ENDIAN)
+// already set (Darwin's TargetConditionals.h)
+#elif defined(__BYTE_ORDER__) && __BYTE_ORDER__ == __ORDER_LITTLE_ENDIAN__
+// aarch64, arm, riscv, ...: without this they byte-swap nothing and write little-endian bitstreams
+#define TARGET_RT_LITTLE_ENDIAN 1
+#elif defined(__i386__)
 #define TARGET_RT_LITTLE_ENDIAN 1
 #elif defined(__x86_64__)
 #define TARGET_RT_LITTLE_ENDIAN 1
