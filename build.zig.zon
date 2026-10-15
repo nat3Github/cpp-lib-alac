@@ -2,7 +2,7 @@
     .name = .alac,
     .fingerprint = 0x4b4e173aacae3221,
     .version = "0.0.0",
-    .minimum_zig_version = "0.16.0",
+    .minimum_zig_version = "0.17.0",
     .paths = .{
         "build.zig",
         "build.zig.zon",
